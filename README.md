@@ -2,6 +2,8 @@
 
 Eureka is a simple tool to encrypt files and folders. It works on Windows, Linux and MacOS.
 
+[![.github/workflows/release.yaml](https://github.com/JohnieXu/eureka/actions/workflows/release.yaml/badge.svg?branch=master&event=release)](https://github.com/JohnieXu/eureka/actions/workflows/release.yaml)
+
 ## Security and Status
 
 Eureka is pretty simple, and well commented. Anyone is free to audit the software themselves.
