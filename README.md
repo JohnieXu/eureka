@@ -1,8 +1,16 @@
+
+[![.github/workflows/release.yaml](https://github.com/JohnieXu/eureka/actions/workflows/release.yaml/badge.svg)](https://github.com/JohnieXu/eureka/actions/workflows/release.yaml)
+
+This is a fork from [mimoo/eureka](https://github.com/mimoo/eureka)
+
+Yout get a binary in [this repo release](https://github.com/JohnieXu/eureka/releases).
+
+The origin README follows:
+
 ![EUREKA](https://i.imgur.com/qSscFjx.png)
 
 Eureka is a simple tool to encrypt files and folders. It works on Windows, Linux and MacOS.
 
-[![.github/workflows/release.yaml](https://github.com/JohnieXu/eureka/actions/workflows/release.yaml/badge.svg?branch=master&event=release)](https://github.com/JohnieXu/eureka/actions/workflows/release.yaml)
 
 ## Security and Status
 
