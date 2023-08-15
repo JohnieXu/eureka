@@ -104,6 +104,7 @@ func main() {
 	// parse flags
 	about := flag.Bool("about", false, "to get redirected to github.com/mimoo/eureka")
 	noClipboard := flag.Bool("noclipboard", false, "no clipboard")
+	fileNameAsKey := flag.Bool("fileNameAsKey", true, "use fileName as key, in encrypt: replace the out fileName with key, in decrypt: use the fileName as key")
 
 	flag.Parse()
 
@@ -128,6 +129,9 @@ func main() {
 	encrypt, decrypt := new(bool), new(bool)
 	inFile := &flag.Args()[0]
 	ext := strings.ToLower(filepath.Ext(*inFile))
+	fileName := filepath.Base(*inFile)
+	fileName = fileName[:len(fileName)-len(ext)]
+	fmt.Printf("eureka: fileName is %s\n", fileName)
 	if ext != ".encrypted" {
 		*encrypt = true
 	} else {
@@ -153,10 +157,25 @@ func main() {
 	// get key if we are decrypting
 	if *decrypt {
 		// get key
-		keyHex, err := promptKey(*noClipboard)
-		if err != nil {
-			fmt.Printf("eureka: %s\n", err)
-			os.Exit(1)
+		var keyHex string
+		var err error
+
+		if !*fileNameAsKey || len(fileName) != 64 {
+			// use promptKey
+			if !*fileNameAsKey {
+				fmt.Printf("eureka: fileNameAsKey option is false, read key from Prompt\n")
+			}
+			if len(fileName) != 64 {
+				fmt.Printf("eureka: fileName is not 64 hexadecimal string, read key from Prompt\n")
+			}
+			keyHex, err = promptKey(*noClipboard)
+			if err != nil {
+				fmt.Printf("eureka: %s\n", err)
+				os.Exit(1)
+			}
+		} else {
+			// use fileName as key
+			keyHex = fileName
 		}
 
 		// decode and check key
@@ -194,6 +213,7 @@ func main() {
 		// write file to disk
 		_, outFile := filepath.Split(*inFile)
 		outFile = outFile + ".encrypted"
+		// TODO: if fileNameAsKey replace fileName with key hex string
 		if err = ioutil.WriteFile(outFile, contentAfter, 0600); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
