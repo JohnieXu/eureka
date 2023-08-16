@@ -212,8 +212,11 @@ func main() {
 		contentAfter = AESgcm.Seal(nil, nonce, buf.Bytes(), nil)
 		// write file to disk
 		_, outFile := filepath.Split(*inFile)
-		outFile = outFile + ".encrypted"
-		// TODO: if fileNameAsKey replace fileName with key hex string
+		if *fileNameAsKey {
+			outFile = hex.EncodeToString(key) + ".encrypted"
+		} else {
+			outFile = outFile + ".encrypted"
+		}
 		if err = ioutil.WriteFile(outFile, contentAfter, 0600); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -222,8 +225,12 @@ func main() {
 		stringKey := fmt.Sprintf("%032x", key)
 		// notification
 		fmt.Printf("File encrypted at %s\n", outFile)
-		fmt.Println("Your recipient will need Eureka to decrypt the file: https://github.com/mimoo/eureka")
-		fmt.Println("In a different secure channel, pass the following one-time key to your recipient.")
+		if *fileNameAsKey {
+			fmt.Printf("The key is the name of the file, you can decrypt the file with commond: eureka %s\n", outFile)
+		} else {
+			fmt.Println("Your recipient will need Eureka to decrypt the file: https://github.com/mimoo/eureka")
+			fmt.Println("In a different secure channel, pass the following one-time key to your recipient.")
+		}
 
 		// clipboard option
 		reader := bufio.NewReader(os.Stdin)
